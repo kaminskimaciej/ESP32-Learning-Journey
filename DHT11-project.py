@@ -1,56 +1,38 @@
-import network
-import time
 from machine import Pin, I2C
+import time
+import dht
 import ssd1306
 
-WIFI_SSID = 'NETIASPOT-wyD5'
-WIFI_PASSWORD = '5WF8mHfUS4wMM'
+#sensor init
+sensor = dht.DHT11(Pin(5))
 
+#screen init
 i2c = I2C(0, scl=Pin(22), sda=Pin(21))
 oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
-def connect_wifi():
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    
+#getting data from dht11 sensor
+def call_dht():
+    try:
+        sensor.measure()
+        return sensor.temperature(), sensor.humidity()
+    except OSError as e:
+        print('Sensor error')
+        return None, None
+#printing out data from sensor to OLED screen
+def screen_call():
+    temp, hum = call_dht()
     oled.fill(0)
     
-    if not wlan.isconnected():
-        wlan.connect(WIFI_SSID, WIFI_PASSWORD)
-        
-        timeout = 10
-        dots = ""
-        
-        while not wlan.isconnected() and timeout > 0:
-                    oled.fill(0)
-                    oled.text("Connecting" + dots, 0, 0)
-                    oled.show()
-                    
-                    dots = dots + "."
-                    if len(dots) > 3:
-                        dots = ""
-                        
-                    time.sleep(1)
-                    timeout -= 1
-        
-        if wlan.isconnected():
-            oled.fill(0)
-            oled.text("Connected!", 0, 0)
-            oled.text(str(wlan.ifconfig()[0]), 0, 20)
-            oled.show()
-        else:
-            oled.fill(0)
-            oled.text("Con Failed",0 ,0)
-            oled.show()
+    if temp is not None and hum is not None:
+        oled.fill(0)
+        oled.text("Temp: " + str(temp) + "C", 0, 0)
+        oled.text("Hum: " + str(hum) + "%", 0, 20)
+    else:
+        oled.text("Data error", 0 ,0)
             
-   
-connect_wifi()
+    oled.show()
 
 while True:
-    wlan = network.WLAN(network.STA_IF)
-    if wlan.isconnected():
-        print("Everything is ok")
-    else:
-        print("Connection error")
-            
-    time.sleep(10)
+    screen_call()
+    
+    time.sleep(2)
