@@ -3,8 +3,8 @@ import time
 from machine import Pin, I2C
 import ssd1306
 
-WIFI_SSID = 'NETIASPOT-wyD5'
-WIFI_PASSWORD = '5WF8mHfUS4wMM'
+WIFI_SSID = 'xxxx'
+WIFI_PASSWORD = 'xxxx'
 
 i2c = I2C(0, scl=Pin(22), sda=Pin(21))
 oled = ssd1306.SSD1306_I2C(128, 64, i2c)
