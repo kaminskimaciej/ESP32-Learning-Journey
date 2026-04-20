@@ -23,5 +23,16 @@ A beginner-friendly weather monitoring project.
 2. Upload the `DHT11-project.py` file to your board.
 3. Run the script and observe the data on the OLED display.
 
+### 02. WiFi Connection
+Learning how to connect the ESP32 to a local network using MicroPython.
+- **Goal:** Enable internet connectivity and obtain an IP address.
+- **Features:** - Dynamic connection status display on the OLED screen.
+  - Visual loading animation ("Connecting...").
+  - Automated network status verification in the main loop.
+
+## Setup
+1. Update `WIFI_SSID` and `WIFI_PASSWORD` in the script.
+2. Ensure `ssd1306.py` is available on the device.
+3. Run the script and check the OLED display for the assigned local IP address.
 ---
 *Created by Maciej Kaminski*
